@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Camera Preview -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Captured Image View -->
+    <ImageView
+        android:id="@+id/capturedImage"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/controlsContainer"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Touch Overlay for Color Detection -->
+    <View
+        android:id="@+id/touchOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/controlsContainer"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Camera Controls Container -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/controlsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80000000"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Flash Button -->
+        <ImageButton
+            android:id="@+id/flashButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Toggle Flash"
+            android:src="@drawable/baseline_flash_off_24"
+            app:tint="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@id/cameraCaptureButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cameraCaptureButton" />
+
+        <!-- Capture Button -->
+        <Button
+            android:id="@+id/cameraCaptureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Photo"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <!-- Retake Button -->
+        <Button
+            android:id="@+id/retakeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retake"
+            android:textColor="@android:color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <!-- Switch Camera Button -->
+        <ImageButton
+            android:id="@+id/switchCameraButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Switch Camera"
+            android:src="@drawable/baseline_flip_camera_ios_24"
+            app:tint="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@id/cameraCaptureButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cameraCaptureButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Color Information Layout -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/colorInfoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toTopOf="@id/controlsContainer">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <!-- Color Preview -->
+            <View
+                android:id="@+id/colorPreview"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/color_preview_background" />
+
+            <!-- Color Details -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/colorNameText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="Red (G1)" />
+
+                <TextView
+                    android:id="@+id/colorDetailsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="14sp"
+                    tools:text="R: 255, G: 0, B: 0" />
+            </LinearLayout>
+
+            <!-- Proceed Button -->
+            <Button
+                android:id="@+id/proceedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Proceed"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
