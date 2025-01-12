@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Basic Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#FF808080</color>
+    <color name="light_gray">#FFD3D3D3</color>
+    <color name="dark_gray">#FF404040</color>
+
+    <!-- Primary Colors -->
+    <color name="primary_color">#FF6200EE</color>
+    <color name="primary_light_color">#FFBB86FC</color>
+    <color name="primary_dark_color">#FF3700B3</color>
+
+    <!-- Secondary Colors -->
+    <color name="secondary_color">#FF03DAC5</color>
+    <color name="secondary_light_color">#FF66FFF9</color>
+    <color name="secondary_dark_color">#FF018786</color>
+
+    <!-- CardView Background Colors -->
+    <color name="cardview_bg">#FFF5F5F5</color>
+    <color name="cardview_shadow_color">#1F000000</color>
+
+    <!-- Error and Notification Colors -->
+    <color name="error_color">#FFB00020</color>
+    <color name="success_color">#FF4CAF50</color>
+    <color name="info_color">#FF2196F3</color>
 </resources>

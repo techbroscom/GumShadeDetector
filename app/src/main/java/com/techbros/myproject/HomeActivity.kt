@@ -16,19 +16,21 @@ import com.techbros.myproject.viewModel.HomeViewModel
 
 class HomeActivity : AppCompatActivity() {
     private val homeViewModel: HomeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         val binding: ActivityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         binding.lifecycleOwner = this
         binding.viewModel = homeViewModel
-        val adapter = TestAdapter(homeViewModel.tests.value ?: emptyList())
+
+        val adapter = TestAdapter(emptyList())
         binding.rvTests.layoutManager = LinearLayoutManager(this)
         binding.rvTests.adapter = adapter
 
-        homeViewModel.tests.observe(this, { tests ->
-            adapter.notifyDataSetChanged()
-        })
+        homeViewModel.tests.observe(this) { tests ->
+            adapter.updateTests(tests)
+        }
 
         binding.btnStartTest.setOnClickListener {
             val intent = Intent(this, PatientDetailsActivity::class.java)

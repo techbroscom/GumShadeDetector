@@ -19,7 +19,7 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun loadLastFiveTestsFromFirebase() {
-        /*val query = database.orderByKey().limitToLast(5)
+        val query = database.orderByKey().limitToLast(5)
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -34,7 +34,7 @@ class HomeViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {
                 // Handle possible errors
             }
-        })*/
+        })
     }
 }
 

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.techbros.myproject.databinding.ItemTestBinding
 import com.techbros.myproject.model.Test
 
-class TestAdapter(private val tests: List<Test>) : RecyclerView.Adapter<TestAdapter.TestViewHolder>() {
+class TestAdapter(private var tests: List<Test>) : RecyclerView.Adapter<TestAdapter.TestViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestViewHolder {
         val binding = ItemTestBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -19,6 +19,12 @@ class TestAdapter(private val tests: List<Test>) : RecyclerView.Adapter<TestAdap
 
     override fun getItemCount(): Int = tests.size
 
+    // Update the dataset and notify the adapter of the change
+    fun updateTests(newTests: List<Test>) {
+        tests = newTests
+        notifyDataSetChanged()
+    }
+
     class TestViewHolder(private val binding: ItemTestBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(test: Test) {
             binding.test = test
@@ -26,3 +32,4 @@ class TestAdapter(private val tests: List<Test>) : RecyclerView.Adapter<TestAdap
         }
     }
 }
+
