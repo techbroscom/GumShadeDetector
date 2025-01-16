@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-01-04T03:56:17.028778Z">
+        <DropdownSelection timestamp="2025-01-16T04:05:49.841046Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/manisankar/.android/avd/Galaxy_Z_Fold_6_API_34.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/manisankar/.android/avd/Pixel_9_Pro_API_TiramisuPrivacySandbox.avd" />
             </handle>
           </Target>
         </DropdownSelection>
