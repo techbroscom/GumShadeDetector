@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ResultActivity">
 
     <androidx.cardview.widget.CardView
@@ -43,6 +44,7 @@
     </androidx.cardview.widget.CardView>
 
     <Button
+        android:backgroundTint="@color/btn_pink"
         android:id="@+id/analyzeButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -55,6 +57,7 @@
         app:layout_constraintTop_toBottomOf="@+id/colorCard" />
 
     <Button
+        android:backgroundTint="@color/btn_pink"
         android:id="@+id/previousButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -95,6 +98,7 @@
         app:layout_constraintTop_toBottomOf="@id/resultText" />
 
     <Button
+        android:backgroundTint="@color/btn_pink"
         android:id="@+id/saveButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

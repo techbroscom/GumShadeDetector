@@ -27,4 +27,5 @@
     <color name="info_color">#FF2196F3</color>
 
     <color name="btn_pink">#E82561</color>
+    <color name="btn_pink_bg">#F2AE66</color>
 </resources>
