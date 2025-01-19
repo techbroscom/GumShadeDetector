@@ -61,6 +61,8 @@ class MainActivity : AppCompatActivity() {
             retakeButton.setOnClickListener { retakePhoto() }
             flashButton.setOnClickListener { toggleFlash() }
             switchCameraButton.setOnClickListener { switchCamera() }
+            uploadButton.setOnClickListener { openFileChooser() }
+
 
             // Initialize scale gesture detector for zoom functionality
             scaleGestureDetector = ScaleGestureDetector(this@MainActivity,
@@ -291,6 +293,15 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
+    private fun openFileChooser() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type = "image/*"
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
+        startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
+    }
+
+
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
@@ -307,8 +318,27 @@ class MainActivity : AppCompatActivity() {
         cameraExecutor.shutdown()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
+            data?.data?.let { uri ->
+                lifecycleScope.launch {
+                    val bitmap = withContext(Dispatchers.IO) {
+                        contentResolver.openInputStream(uri)?.use { inputStream ->
+                            BitmapFactory.decodeStream(inputStream)
+                        }
+                    }
+                    bitmap?.let {
+                        handleCapturedImage(it)
+                    } ?: Toast.makeText(this@MainActivity, "Failed to load image", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     companion object {
         private const val REQUEST_CODE_PERMISSIONS = 10
+        private const val REQUEST_CODE_PICK_IMAGE = 20
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 }

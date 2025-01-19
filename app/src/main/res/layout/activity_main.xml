@@ -89,6 +89,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/cameraCaptureButton" />
 
+        <!-- Upload Button -->
+        <ImageButton
+            android:id="@+id/uploadButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Upload Image"
+            android:src="@drawable/baseline_upload_file_24"
+            app:tint="#FFFFFF"
+            app:layout_constraintBottom_toTopOf="@id/switchCameraButton"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Color Information Layout -->
