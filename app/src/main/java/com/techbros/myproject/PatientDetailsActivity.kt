@@ -8,8 +8,10 @@ import android.webkit.WebViewClient
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.techbros.myproject.databinding.ActivityPatientDetailsBinding
 import com.techbros.myproject.viewModel.PatientDetailsViewModel
 import java.io.BufferedReader
@@ -24,8 +26,7 @@ class PatientDetailsActivity : AppCompatActivity() {
     ) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(
-            this,
-            R.layout.activity_patient_details
+            this, R.layout.activity_patient_details
         )
         binding.lifecycleOwner = this
         binding.viewModel = patientDetailsViewModel
@@ -60,6 +61,10 @@ class PatientDetailsActivity : AppCompatActivity() {
         // Load the HTML file from raw folder
         val htmlContent = readHtmlFileFromRaw(R.raw.tooth)
         binding.webView.loadDataWithBaseURL("", htmlContent, "text/html", "UTF-8", null)
+
+        binding.tvInstructions.setOnClickListener {
+            showInstructionsDialog()
+        }
     }
 
     // Function to read the HTML file as a string
@@ -76,7 +81,25 @@ class PatientDetailsActivity : AppCompatActivity() {
         return stringBuilder.toString()
     }
 
-    class WebAppInterface(private val context: Context, private val binding: ActivityPatientDetailsBinding) {
+    private fun showInstructionsDialog() {
+        val instructions = """
+              - Capture the image in direct sunlight to achieve optimal lighting.
+              - Avoid bright-colored surroundings that may distract from the subject.
+              - Ensure that any lipstick worn by the patient is removed prior to capturing the image.
+              - The gingiva should be clean and free of plaque and debris and moist with saliva.
+              - Position the camera at a distance of 2 to 6 feet from the subject to ensure proper framing.
+              - Ensure that the device capturing the image is aligned with the gingiva, avoiding any angled shots.
+        """.trimIndent()
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Instructions")
+            .setMessage(instructions)
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss()
+            }.show()
+    }
+
+    class WebAppInterface(
+        private val context: Context, private val binding: ActivityPatientDetailsBinding
+    ) {
 
         @JavascriptInterface
         fun onElementsSelected(dataKeys: String) {
