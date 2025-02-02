@@ -22,10 +22,11 @@ class ResultActivity : AppCompatActivity() {
         // Get the selected color and RGB values from intent
         val selectedColor = intent.getIntExtra("SELECTED_COLOR", Color.WHITE)
         val rgbValues = intent.getStringExtra("RGB_VALUES") ?: "N/A"
+        val labValues = intent.getStringExtra("LAB_VALUES") ?: "N/A"
 
         // Display color and details
         binding.colorPreview.setBackgroundColor(selectedColor)
-        binding.colorDetailsText.text = rgbValues
+        binding.colorDetailsText.text = rgbValues+"\n"+labValues
 
         // Handle button clicks
         binding.previousButton.setOnClickListener { finish() }

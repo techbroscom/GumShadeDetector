@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.pow
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -89,7 +90,12 @@ class MainActivity : AppCompatActivity() {
                 override fun onColorSelected(color: Int) {
                     colorPreview.setBackgroundColor(color)
                     val rgbValues = "R: ${Color.red(color)}, G: ${Color.green(color)}, B: ${Color.blue(color)}"
-                    colorDetailsText.text = rgbValues
+                    val r = Color.red(color)
+                    val g = Color.green(color)
+                    val b = Color.blue(color)
+                    val (l, a, bLab) = rgbToLab(r, g, b)
+                    val labValues = "L: ${"%.2f".format(l)}, A: ${"%.2f".format(a)}, B: ${"%.2f".format(bLab)}"
+                    colorDetailsText.text = labValues
                     colorNameText.text = "Selected Color"
                 }
             })
@@ -106,7 +112,11 @@ class MainActivity : AppCompatActivity() {
                     val selectedColor = (binding.colorPreview.background as? ColorDrawable)?.color
                         ?: Color.WHITE // Default to white if no color is selected
                     val rgbValues = "R: ${Color.red(selectedColor)}, G: ${Color.green(selectedColor)}, B: ${Color.blue(selectedColor)}"
-
+                    val r = Color.red(selectedColor)
+                    val g = Color.green(selectedColor)
+                    val b = Color.blue(selectedColor)
+                    val (l, a, bLab) = rgbToLab(r, g, b)
+                    val labValues = "L: ${"%.2f".format(l)}, A: ${"%.2f".format(a)}, B: ${"%.2f".format(bLab)}"
                     // Extract extras from the current intent
                     val extras = intent.extras
 
@@ -114,6 +124,7 @@ class MainActivity : AppCompatActivity() {
                     val resultIntent = Intent(this@MainActivity, ResultActivity::class.java).apply {
                         putExtra("SELECTED_COLOR", selectedColor)
                         putExtra("RGB_VALUES", rgbValues)
+                        putExtra("LAB_VALUES", labValues)
 
                         // Pass previous activity's extras
                         extras?.let {
@@ -340,5 +351,28 @@ class MainActivity : AppCompatActivity() {
         private const val REQUEST_CODE_PERMISSIONS = 10
         private const val REQUEST_CODE_PICK_IMAGE = 20
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+    }
+
+    fun rgbToLab(r: Int, g: Int, b: Int): Triple<Double, Double, Double> {
+        // Normalize RGB values (0 - 1)
+        val rNorm = r / 255.0
+        val gNorm = g / 255.0
+        val bNorm = b / 255.0
+
+        // Convert RGB to XYZ
+        val x = (rNorm * 0.4124564 + gNorm * 0.3575761 + bNorm * 0.1804375) / 0.95047
+        val y = (rNorm * 0.2126729 + gNorm * 0.7151522 + bNorm * 0.0721750) / 1.00000
+        val z = (rNorm * 0.0193339 + gNorm * 0.1191920 + bNorm * 0.9503041) / 1.08883
+
+        // Convert XYZ to Lab
+        fun f(t: Double): Double {
+            return if (t > 0.008856) t.pow(1.0 / 3.0) else (7.787 * t) + (16.0 / 116.0)
+        }
+
+        val l = (116 * f(y)) - 16
+        val a = 500 * (f(x) - f(y))
+        val b = 200 * (f(y) - f(z))
+
+        return Triple(l, a, b)
     }
 }
