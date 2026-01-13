@@ -1,31 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Basic Colors -->
+    <!-- Base Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gray">#FF808080</color>
-    <color name="light_gray">#FFD3D3D3</color>
-    <color name="dark_gray">#FF404040</color>
 
-    <!-- Primary Colors -->
-    <color name="primary_color">#FF6200EE</color>
-    <color name="primary_light_color">#FFBB86FC</color>
-    <color name="primary_dark_color">#FF3700B3</color>
+    <!-- Light Theme Colors -->
+    <color name="primary_light">#E82561</color>
+    <color name="primary_variant_light">#C01A4D</color>
+    <color name="secondary_light">#F2AE66</color>
+    <color name="secondary_variant_light">#E09A52</color>
 
-    <!-- Secondary Colors -->
-    <color name="secondary_color">#FF03DAC5</color>
-    <color name="secondary_light_color">#FF66FFF9</color>
-    <color name="secondary_dark_color">#FF018786</color>
+    <color name="background_light">#FAFAFA</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="surface_variant_light">#F5F5F5</color>
 
-    <!-- CardView Background Colors -->
-    <color name="cardview_bg">#FFF5F5F5</color>
-    <color name="cardview_shadow_color">#1F000000</color>
+    <color name="on_primary_light">#FFFFFF</color>
+    <color name="on_secondary_light">#FFFFFF</color>
+    <color name="on_background_light">#1C1B1F</color>
+    <color name="on_surface_light">#1C1B1F</color>
+    <color name="on_surface_variant_light">#49454F</color>
 
-    <!-- Error and Notification Colors -->
-    <color name="error_color">#FFB00020</color>
-    <color name="success_color">#FF4CAF50</color>
-    <color name="info_color">#FF2196F3</color>
+    <!-- Dark Theme Colors -->
+    <color name="primary_dark">#FFB3C7</color>
+    <color name="primary_variant_dark">#E82561</color>
+    <color name="secondary_dark">#FFD699</color>
+    <color name="secondary_variant_dark">#F2AE66</color>
 
+    <color name="background_dark">#121212</color>
+    <color name="surface_dark">#1E1E1E</color>
+    <color name="surface_variant_dark">#2C2C2C</color>
+
+    <color name="on_primary_dark">#3E0017</color>
+    <color name="on_secondary_dark">#3E2D00</color>
+    <color name="on_background_dark">#E6E1E5</color>
+    <color name="on_surface_dark">#E6E1E5</color>
+    <color name="on_surface_variant_dark">#CAC4D0</color>
+
+    <!-- Neutral Colors -->
+    <color name="outline_light">#79747E</color>
+    <color name="outline_dark">#938F99</color>
+
+    <!-- Status Colors -->
+    <color name="error">#B3261E</color>
+    <color name="error_dark">#F2B8B5</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="on_error_dark">#601410</color>
+
+    <color name="success">#4CAF50</color>
+    <color name="success_dark">#81C784</color>
+    <color name="on_success">#FFFFFF</color>
+
+    <color name="info">#2196F3</color>
+    <color name="info_dark">#64B5F6</color>
+    <color name="on_info">#FFFFFF</color>
+
+    <color name="warning">#FF9800</color>
+    <color name="warning_dark">#FFB74D</color>
+    <color name="on_warning">#FFFFFF</color>
+
+    <!-- Elevation/Shadow -->
+    <color name="shadow_light">#1A000000</color>
+    <color name="shadow_dark">#33000000</color>
+
+    <!-- Divider -->
+    <color name="divider_light">#1F000000</color>
+    <color name="divider_dark">#1FFFFFFF</color>
+
+    <!-- Transparent -->
+    <color name="transparent">#00000000</color>
+
+    <!-- Legacy support (for backward compatibility) -->
     <color name="btn_pink">#E82561</color>
     <color name="btn_pink_bg">#F2AE66</color>
 </resources>

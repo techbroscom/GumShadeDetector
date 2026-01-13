@@ -18,49 +18,70 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 
-class PatientDetailsActivity : AppCompatActivity() {
+class PatientDetailsActivity : BaseActivity() {
     private val patientDetailsViewModel: PatientDetailsViewModel by viewModels()
-    lateinit var binding: ActivityPatientDetailsBinding
-    override fun onCreate(
-        savedInstanceState: Bundle?
-    ) {
+    private lateinit var binding: ActivityPatientDetailsBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(
-            this, R.layout.activity_patient_details
-        )
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_patient_details)
         binding.lifecycleOwner = this
         binding.viewModel = patientDetailsViewModel
 
-        binding.btnSubmit.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("name", binding.etName.text.toString())
-            bundle.putString("age", binding.etAge.text.toString())
-            bundle.putString("gender", binding.filledExposedDropdown.text.toString())
-            bundle.putString("remarks", binding.etOtherDetails.text.toString())
-            // Launch camera to take picture
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtras(bundle)
-            startActivity(intent)
-        }
+        setupToolbar()
+        setupGenderDropdown()
+        setupWebView()
+        setupClickListeners()
+    }
 
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.apply {
+            title = "Patient Details"
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
+    }
+
+    private fun setupGenderDropdown() {
         val adapter = ArrayAdapter(
             this,
             android.R.layout.simple_dropdown_item_1line,
             resources.getStringArray(R.array.gender_array)
         )
         binding.filledExposedDropdown.setAdapter(adapter)
+    }
 
-        // Enable JavaScript (if required by your HTML)
-        binding.webView.settings.javaScriptEnabled = true
+    private fun setupWebView() {
+        binding.webView.apply {
+            settings.javaScriptEnabled = true
+            webViewClient = WebViewClient()
+            addJavascriptInterface(WebAppInterface(this@PatientDetailsActivity, binding), "AndroidInterface")
+        }
 
-        // Set a WebViewClient to handle loading within the app
-        binding.webView.webViewClient = WebViewClient()
-        // Bind the interface
-        binding.webView.addJavascriptInterface(WebAppInterface(this, binding), "AndroidInterface")
-
-        // Load the HTML file from raw folder
         val htmlContent = readHtmlFileFromRaw(R.raw.tooth)
         binding.webView.loadDataWithBaseURL("", htmlContent, "text/html", "UTF-8", null)
+    }
+
+    private fun setupClickListeners() {
+        binding.btnSubmit.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("name", binding.etName.text.toString())
+                putString("age", binding.etAge.text.toString())
+                putString("gender", binding.filledExposedDropdown.text.toString())
+                putString("remarks", binding.etOtherDetails.text.toString())
+            }
+
+            val intent = Intent(this, MainActivity::class.java).apply {
+                putExtras(bundle)
+            }
+            startActivity(intent)
+        }
 
         binding.tvInstructions.setOnClickListener {
             showInstructionsDialog()

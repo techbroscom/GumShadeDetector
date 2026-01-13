@@ -2,15 +2,8 @@ package com.techbros.myproject
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
-import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,33 +12,71 @@ import com.techbros.myproject.adapter.TestAdapter
 import com.techbros.myproject.databinding.ActivityHomeBinding
 import com.techbros.myproject.viewModel.HomeViewModel
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
+    private lateinit var binding: ActivityHomeBinding
     private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
-        val binding: ActivityHomeBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_home)
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         binding.lifecycleOwner = this
         binding.viewModel = homeViewModel
 
+        setupToolbar()
+        setupRecyclerView()
+        setupClickListeners()
+        setupBackPressHandler()
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.apply {
+            title = "G Shade Wizard"
+            setDisplayShowTitleEnabled(true)
+        }
+
+        binding.btnThemeToggle.setOnClickListener {
+            ThemeManager.toggleTheme(this)
+            updateThemeButtonIcon()
+        }
+        updateThemeButtonIcon()
+    }
+
+    private fun updateThemeButtonIcon() {
+        val currentMode = ThemeManager.getThemeMode(this)
+        val iconRes = when (currentMode) {
+            ThemeManager.THEME_LIGHT -> android.R.drawable.ic_menu_day
+            ThemeManager.THEME_DARK -> android.R.drawable.ic_menu_night
+            else -> android.R.drawable.ic_menu_today
+        }
+        // Icon will be handled by the theme toggle button in layout
+    }
+
+    private fun setupRecyclerView() {
         val adapter = TestAdapter(emptyList()) { test ->
             TestBottomSheet(test).show(supportFragmentManager, "TestBottomSheet")
         }
 
-        binding.rvTests.layoutManager = LinearLayoutManager(this)
-        binding.rvTests.adapter = adapter
+        binding.rvTests.apply {
+            layoutManager = LinearLayoutManager(this@HomeActivity)
+            this.adapter = adapter
+        }
 
         homeViewModel.tests.observe(this) { tests ->
             adapter.updateTests(tests)
         }
+    }
 
+    private fun setupClickListeners() {
         binding.btnStartTest.setOnClickListener {
             val intent = Intent(this, PatientDetailsActivity::class.java)
             startActivity(intent)
         }
-        // Handle back press using onBackPressedDispatcher
+    }
+
+    private fun setupBackPressHandler() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 showExitConfirmationDialog()
@@ -54,12 +85,12 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun showExitConfirmationDialog() {
-        val builder = MaterialAlertDialogBuilder(this)
-        builder.setMessage("Are you sure you want to exit?")
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Exit App")
+            .setMessage("Are you sure you want to exit?")
             .setCancelable(false)
-            .setPositiveButton("Yes") { dialog, id -> finishAffinity() }
-            .setNegativeButton("No") { dialog, id -> dialog.dismiss() }
-        val alert = builder.create()
-        alert.show()
+            .setPositiveButton("Yes") { _, _ -> finishAffinity() }
+            .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 }
