@@ -6,11 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.techbros.myproject.databinding.ItemTestBinding
 import com.techbros.myproject.model.Test
 
-class TestAdapter(private var tests: List<Test>) : RecyclerView.Adapter<TestAdapter.TestViewHolder>() {
+class TestAdapter(
+    private var tests: List<Test>,
+    private val onItemClick: (Test) -> Unit // Click listener
+) : RecyclerView.Adapter<TestAdapter.TestViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestViewHolder {
         val binding = ItemTestBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TestViewHolder(binding)
+        return TestViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: TestViewHolder, position: Int) {
@@ -19,17 +22,24 @@ class TestAdapter(private var tests: List<Test>) : RecyclerView.Adapter<TestAdap
 
     override fun getItemCount(): Int = tests.size
 
-    // Update the dataset and notify the adapter of the change
     fun updateTests(newTests: List<Test>) {
         tests = newTests
         notifyDataSetChanged()
     }
 
-    class TestViewHolder(private val binding: ItemTestBinding) : RecyclerView.ViewHolder(binding.root) {
+    class TestViewHolder(
+        private val binding: ItemTestBinding,
+        private val onItemClick: (Test) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(test: Test) {
             binding.test = test
             binding.executePendingBindings()
+
+            // Set click listener
+            binding.root.setOnClickListener {
+                onItemClick(test)
+            }
         }
     }
 }
-

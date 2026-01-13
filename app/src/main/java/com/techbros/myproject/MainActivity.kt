@@ -1,5 +1,6 @@
 package com.techbros.myproject
 
+import EyeDropper
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -7,12 +8,15 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -86,23 +90,52 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Set up EyeDropper for detecting color from the captured image
-            val eyeDropper = EyeDropper(capturedImage, object : EyeDropper.ColorSelectionListener {
-                override fun onColorSelected(color: Int) {
-                    colorPreview.setBackgroundColor(color)
-                    val rgbValues = "R: ${Color.red(color)}, G: ${Color.green(color)}, B: ${Color.blue(color)}"
-                    val r = Color.red(color)
-                    val g = Color.green(color)
-                    val b = Color.blue(color)
-                    val (l, a, bLab) = rgbToLab(r, g, b)
-                    val labValues = "L: ${"%.2f".format(l)}, A: ${"%.2f".format(a)}, B: ${"%.2f".format(bLab)}"
-                    colorDetailsText.text = labValues
-                    colorNameText.text = "Selected Color"
-                }
-            })
+            val eyeDropper = object {
+                fun notifyColorSelection(view: ImageView, event: MotionEvent) {
+                    val bitmap = capturedBitmap ?: return
 
-            capturedImage.setOnTouchListener { _, event ->
+                    // Get image matrix values for coordinate transformation
+                    val matrix = FloatArray(9)
+                    view.imageMatrix.getValues(matrix)
+
+                    // Calculate actual pixel coordinates in the bitmap
+                    val scaleX = matrix[Matrix.MSCALE_X]
+                    val scaleY = matrix[Matrix.MSCALE_Y]
+                    val transX = matrix[Matrix.MTRANS_X]
+                    val transY = matrix[Matrix.MTRANS_Y]
+
+                    // Convert touch point to bitmap coordinates
+                    val bitmapX = ((event.x - transX) / scaleX).toInt().coerceIn(0, bitmap.width - 1)
+                    val bitmapY = ((event.y - transY) / scaleY).toInt().coerceIn(0, bitmap.height - 1)
+
+                    try {
+                        val pixelColor = bitmap.getPixel(bitmapX, bitmapY)
+                        binding.colorPreview.setBackgroundColor(pixelColor)
+
+                        val r = Color.red(pixelColor)
+                        val g = Color.green(pixelColor)
+                        val b = Color.blue(pixelColor)
+                        val (l, a, bLab) = rgbToLab(r, g, b)
+                        val labValues = "L: ${"%.2f".format(l)}, A: ${"%.2f".format(a)}, B: ${"%.2f".format(bLab)}"
+                        binding.colorDetailsText.text = labValues
+                        binding.colorNameText.text = "Selected Color"
+
+                        // Update magnifier with the same coordinates
+                        binding.magnifierView.updateMagnifier(bitmap, bitmapX.toFloat(), bitmapY.toFloat())
+                    } catch (e: Exception) {
+                        // Handle exceptions (e.g., out of bounds)
+                        Log.e("MainActivity", "Error selecting color: ${e.message}")
+                    }
+                }
+            }
+
+            // Update touch listener
+            binding.capturedImage.setOnTouchListener { view, event ->
                 if (event.action == MotionEvent.ACTION_DOWN || event.action == MotionEvent.ACTION_MOVE) {
-                    eyeDropper.notifyColorSelection(event.x.toInt(), event.y.toInt())
+                    binding.magnifierView.visibility = View.VISIBLE
+                    eyeDropper.notifyColorSelection(binding.capturedImage, event)
+                } else if (event.action == MotionEvent.ACTION_UP) {
+                    binding.magnifierView.visibility = View.GONE
                 }
                 true
             }

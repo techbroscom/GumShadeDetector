@@ -30,7 +30,10 @@ class HomeActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = homeViewModel
 
-        val adapter = TestAdapter(emptyList())
+        val adapter = TestAdapter(emptyList()) { test ->
+            TestBottomSheet(test).show(supportFragmentManager, "TestBottomSheet")
+        }
+
         binding.rvTests.layoutManager = LinearLayoutManager(this)
         binding.rvTests.adapter = adapter
 

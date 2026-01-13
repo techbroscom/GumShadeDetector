@@ -19,7 +19,7 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun loadLastFiveTestsFromFirebase() {
-        val query = database.orderByKey().limitToLast(5)
+        val query = database.orderByKey().limitToLast(50)
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -28,7 +28,7 @@ class HomeViewModel : ViewModel() {
                     val test = dataSnapshot.getValue(Test::class.java)
                     test?.let { testList.add(it) }
                 }
-                _tests.value = testList
+                _tests.value = testList.reversed() // Latest first
             }
 
             override fun onCancelled(error: DatabaseError) {
